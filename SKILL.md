@@ -11,9 +11,10 @@ description: |
   (6) building evaluation pipelines for web-extracted intelligence.
   Covers: the trust taxonomy (relational vs informational), the inversion principle,
   source independence detection, failure mode analysis, persona-based trust UX,
-  and the 39-issue registry of common pitfalls.
+  the 39-issue registry of common pitfalls, and research-backed implementation
+  techniques from FActScore, SAFE, Semantic Entropy, and RAGAS.
 author: Claude Code (extracted via Claudeception)
-version: 1.0.0
+version: 2.0.0
 date: 2026-03-18
 ---
 
@@ -37,6 +38,22 @@ Use this skill when:
 - Someone asks "how do we evaluate accuracy when there's no ground truth?"
 - A trust framework has been proposed and needs stress-testing
 
+## Competitive Landscape
+
+No existing Claude Code skill or tool provides a general-purpose AI trust evaluation
+framework. The closest analogs are domain-specific:
+
+| Tool | What It Does | Gap |
+|------|-------------|-----|
+| fact-checker (daymade) | Fact-checks claims in docs | No framework, just claim-level |
+| academic-research-skills (Imbad0202) | Anti-hallucination for papers | Locked to academic pipeline |
+| OSINT Skill (smixs) | A/B/C/D confidence grading | Purpose-built for person research |
+| claude-deep-research-skill (199-bio) | CiteGuard + source credibility | Within research, not standalone |
+| last30days-skill (mvanhorn) | Cross-platform convergence | Implicit trust, no explicit scores |
+
+This skill fills the gap: a **general-purpose, domain-agnostic** framework for evaluating
+and designing trust in any AI system that extracts from uncontrolled sources.
+
 ## The Three Laws of Trust (Meta-Framework)
 
 Before designing any trust system, understand how trust actually gets built in information
@@ -55,6 +72,10 @@ products. Trust is **relational, not just informational**:
 
 **Design backward from these three principles, not forward from a feature list.**
 
+Research support: The Elaboration Likelihood Model (ELM) study (Emerald 2025) confirms
+this dual-track: expert users rely on content quality (central route), casual users rely
+on interface cues (peripheral route). Design for both.
+
 ## The Inversion Principle
 
 The most important non-obvious insight from adversarial review:
@@ -62,9 +83,115 @@ The most important non-obvious insight from adversarial review:
 > Instead of trying to prove claims are correct (an unbounded problem), focus on
 > detecting when the system is likely wrong (a tractable problem).
 
-Anomaly detection, out-of-distribution detection, and uncertainty quantification are
-more feasible engineering problems than comprehensive verification. Build "likely wrong"
-detection alongside — or even instead of — "probably right" scoring.
+Research-backed implementation: **Semantic Entropy** (Kuhn et al., Nature 2024) provides
+the most validated "likely wrong" detector. Generate N responses (5-10) to the same query,
+cluster by meaning using NLI (DeBERTa), compute entropy over clusters. High semantic
+entropy = the model is uncertain = likely wrong. Task-agnostic, no training data needed.
+
+For cheaper approximation: **Semantic Entropy Probes** (Kossen et al., ICLR 2025) achieve
+similar detection from a single forward pass using hidden-state probes — 5-10x cheaper.
+
+## Research-Backed Implementation Pipeline
+
+Based on survey of 25+ papers (2023-2026), the optimal verification pipeline chains
+these components:
+
+### Step 1: Claim Decomposition (Adaptive)
+
+**Use:** FActScore (EMNLP 2023) / SAFE (NeurIPS 2024) decomposition prompts.
+
+**Critical refinement — Molecular Facts** (Kamoi et al., 2024): Raw atomic facts lose
+context (ambiguous pronouns, missing qualifiers). After initial decomposition, run a
+decontextualization pass that resolves pronouns and adds necessary qualifiers to produce
+self-contained "molecular facts."
+
+**Critical refinement — Adaptive decomposition** (EMNLP 2025): Decomposition helps for
+complex multi-hop claims but **hurts** for simple claims (introduces noise, loses context).
+Estimate claim complexity first (entity count, conjunctions, temporal references);
+decompose only when complexity exceeds a threshold. Simple claims go directly to
+verification.
+
+**Quality check:** Use DecMetrics (2025) three dimensions — completeness, correctness,
+semantic entropy — to validate decomposition quality before passing to verification.
+
+### Step 2: Per-Claim Verification
+
+**Primary method — SAFE pipeline** (Google DeepMind, NeurIPS 2024):
+Decompose → Generate search queries → Verify against search results.
+Open-source: `github.com/google-deepmind/long-form-factuality`
+Outperforms human annotators (wins 76% of disagreement cases) at 20x lower cost.
+
+**Grounding metric — RAGAS Faithfulness** (EACL 2024):
+Fraction of claims supported by retrieved context. Implementation: decompose answer
+into claims, check each against context using NLI. Achieved 0.762 precision for
+hallucination detection.
+
+**Key finding:** Don't rely on a single hallucination detector. EMNLP 2025 Industry
+benchmarking found average balanced accuracy below 78% for any single method.
+**Ensemble multiple methods** (RAGAS + self-eval + TrustBC) and take conservative estimate.
+
+### Step 3: Source Independence Check
+
+**Problem:** Web content is massively duplicated. Press releases syndicate to dozens
+of outlets. "Confirmed by 5 sources" from 1 press release is worse than no signal.
+
+**Method — Near-duplicate detection** (NAACL 2025 Industry):
+1. Embed article bodies using sentence transformers
+2. Cluster by cosine similarity > 0.95 (syndication threshold)
+3. Build source graph using hyperlink structure (Srivastava et al., 2024)
+4. Detect circular sourcing via citation-graph cycle detection
+5. Treat each cluster as ONE source for corroboration
+
+**When available:** Parse C2PA metadata (Content Provenance standard) for cryptographic
+content origin verification.
+
+### Step 4: Multi-Source Corroboration Score
+
+**Method — Credibility-weighted aggregation** (MAFC, Scientific Reports 2026):
+
+```
+trust_score = Σ(source_credibility_i × support_i) / N_independent_sources
+```
+
+Track per-source reliability over time. Separate evidence retrieval agents from
+verdict-rendering agents (DelphiAgent cognition/decision split) to prevent retrieval
+biases from contaminating final scores.
+
+**Efficiency:** Use importance sampling (FACT-AUDIT, ACL 2025) to focus verification
+effort on claims where models are most uncertain, rather than uniformly checking everything.
+
+### Step 5: Uncertainty Quantification (Layered)
+
+Route claims through increasingly expensive methods only when cheaper ones are inconclusive:
+
+| Layer | Method | Cost | When to Use |
+|-------|--------|------|-------------|
+| 1 | Verbalized confidence + CoT | Cheap | All claims (first pass) |
+| 2 | Logit entropy | Medium | If available (white-box models) |
+| 3 | Semantic entropy (multi-sample) | Expensive | High-stakes or inconclusive claims |
+
+**Critical:** Never trust raw LLM self-reported confidence without calibration (ICLR 2025).
+Always apply post-hoc calibration — Platt scaling or conformal prediction for guaranteed
+coverage probabilities (QA-Calibration, ICLR 2025).
+
+### Step 6: Behavioral Consistency Check (Reference-Free)
+
+**TrustBC** (Kim et al., 2024): Generate multi-choice distractors from the LLM's own
+response, re-query whether it selects its original answer. Low consistency = low trust.
+This is a cheap, reference-free signal that doesn't require external knowledge.
+
+### Step 7: Adversarial Robustness Testing
+
+Test pipeline against the **Fact-Saboteurs taxonomy** (USENIX Security 2023):
+- Evidence manipulation (edits to source text that flip verdicts)
+- Claim paraphrasing (minor rewording that evades detection)
+- Knowledge poisoning (corrupting reference databases)
+
+Key finding: Even GPT-4 is vulnerable to minor adversarial edits. Require multi-source
+agreement to prevent single-source evidence manipulation.
+
+**Hardening:** Adversarially train groundedness checkers using semantically-manipulated
+evidence passages (AdvERSEM, *SEM 2025).
 
 ## Trust Strategy Taxonomy (17 Strategies, 3 Layers)
 
@@ -72,8 +199,8 @@ detection alongside — or even instead of — "probably right" scoring.
 
 | # | Strategy | What It Does | Key Pitfall |
 |---|----------|-------------|-------------|
-| 1 | Claim Decomposition | Break insights into atomic claims | LLM nondeterminism — decomposition varies across runs |
-| 2 | Multi-Source Corroboration | Count independent sources agreeing | Syndication inflates N — 10 URLs from 1 press release |
+| 1 | Claim Decomposition | Break insights into atomic claims | LLM nondeterminism — use adaptive decomposition + molecular facts |
+| 2 | Multi-Source Corroboration | Count independent sources agreeing | Syndication inflates N — cluster first, then count |
 | 3 | Source Authority Weighting | Weight by source credibility | Authority is context-dependent, not a static hierarchy |
 | 4 | Internal Consistency Checks | Cross-check facts against each other | Consistency ≠ correctness (disinformation is consistent) |
 | 5 | Temporal Freshness | Tag claims with source dates | Publication date ≠ data date; staleness is domain-dependent |
@@ -114,14 +241,14 @@ Web content is massively duplicated. Press releases get syndicated verbatim to d
 outlets. "Confirmed by 5 sources" when all 5 trace to 1 press release is worse than no
 signal — it manufactures false confidence.
 
-**Fix:** Implement source clustering (URL domain, content similarity, publication timestamp
-proximity) before counting corroboration. Report "confirmed by N independent source
-clusters," not "confirmed by N sources."
+**Fix:** Implement source clustering (embedding similarity > 0.95, hyperlink graph analysis,
+publication timestamp proximity) before counting corroboration. Report "confirmed by N
+independent source clusters," not "confirmed by N sources."
 
 ### Circular Sourcing
 
 Distinct from syndication: Source A cites Source B, Source B cites Source A. Creates
-mutual-corroboration illusion. Requires citation-graph analysis, not just content dedup.
+mutual-corroboration illusion. Requires citation-graph cycle detection, not just content dedup.
 
 ### The Streetlight Effect
 
@@ -133,10 +260,10 @@ sense of completeness.
 ### Cognitive Overload
 
 17 trust signals displayed simultaneously paralyze users. Trust signals should reduce
-cognitive load, not add to it. Design for personas:
-- **Executive:** One composite score, drill-down optional
-- **Consultant:** Exportable proof with corroboration and verification badges
-- **Analyst:** Full transparency, counter-evidence, gap analysis
+cognitive load, not add to it. Design for personas (supported by ELM research):
+- **Executive:** One composite score, drill-down optional (peripheral route)
+- **Consultant:** Exportable proof with corroboration and verification badges (central route)
+- **Analyst:** Full transparency, counter-evidence, gap analysis (central route, high elaboration)
 
 ### Common Missing Prerequisites
 
@@ -154,43 +281,64 @@ These are frequently omitted from trust frameworks:
 
 **Phase 0 — Prerequisites:**
 - Entity resolution/disambiguation
-- Source independence detection (source clustering)
-- Claim decomposition research spike (target >90% reproducibility)
+- Source independence detection (near-duplicate clustering + citation graph)
+- Claim decomposition research spike (adaptive decomposition + molecular facts; target >90% reproducibility)
 
 **Phase 1 — Launch (high-ROI, low-friction):**
 - Verified badges via authoritative databases (trust anchor, halo effect)
 - "What We Don't Know" section (most differentiated feature)
-- Composite trust score (one glanceable number)
+- Composite trust score (one glanceable number — use credibility-weighted aggregation)
 - Temporal freshness signals (reframed as "Freshness Badges")
+- Semantic entropy as "likely wrong" detector (inversion principle)
 
 **Phase 2 — Deepen:**
+- SAFE pipeline for per-claim verification (decompose → search → verify)
 - Multi-source corroboration (only after source independence solved)
-- Source authority weighting
+- Source authority weighting with credibility tracking
 - Fact-type stratification + epistemic labels + visual hierarchy
+- TrustBC behavioral consistency checks
 
 **Phase 3 — Mature:**
 - Stability signals, confidence decay, counter-evidence
-- Benchmarks, user feedback, sampling audits
+- Benchmarks (use FACTS Leaderboard methodology, stratified by entity prominence)
+- User feedback with bias correction
+- Sampling audits with stratified sampling and inter-rater reliability (Cohen's kappa > 0.7)
+- Adversarial red-teaming against Fact-Saboteurs taxonomy
 
 **Defer/Kill:**
 - Provenance graph for users (keep as internal QA tool only)
 
-## Verification
+## Open-Source Tools and Benchmarks
+
+| Tool | What It Does | URL |
+|------|-------------|-----|
+| SAFE | Decompose → search → verify pipeline | github.com/google-deepmind/long-form-factuality |
+| FActScore | Atomic fact evaluation | github.com/shmsw25/FActScore |
+| RAGAS | RAG evaluation (faithfulness, relevance) | github.com/explodinggradients/ragas |
+| TrustLLM | 6-dimension trustworthiness benchmark | github.com/HowieHwong/TrustLLM |
+| FACTS Leaderboard | Comprehensive factuality benchmark | kaggle.com/benchmarks/google/facts |
+| FactBench | Dynamic in-the-wild factuality eval | arxiv.org/abs/2410.22257 |
+
+## Verification Checklist
 
 To verify your trust framework is sound, check:
 
 1. **Failure mode for every component** — What happens when it fails? Is a failing trust
    signal worse than no signal?
 2. **Source independence** — Does corroboration scoring account for syndication and circular
-   sourcing?
+   sourcing? (Use embedding clustering + citation graph)
 3. **Calibration protocol** — When you say 80% confidence, are you right 80% of the time?
-   (ECE, Platt scaling, calibration curves)
+   (Apply Platt scaling or conformal prediction; measure ECE)
 4. **User research** — Have you tested whether more transparency increases or decreases
-   trust with actual users?
+   trust with actual users? (ELM predicts it depends on persona)
 5. **Degradation model** — What happens with sparse data, no authoritative sources, or
    irreconcilable contradictions?
-6. **Adversarial threat model** — How can the system be gamed? (SEO manipulation, planted
-   misinformation, astroturfing)
+6. **Adversarial threat model** — Test against Fact-Saboteurs taxonomy: evidence manipulation,
+   claim paraphrasing, knowledge poisoning
+7. **Decomposition quality** — Are you using adaptive decomposition (skip simple claims)?
+   Are molecular facts decontextualized?
+8. **Ensemble verification** — Are you using multiple detection methods? No single method
+   exceeds 78% balanced accuracy alone.
 
 ## Key Quotes to Remember
 
@@ -208,16 +356,41 @@ To verify your trust framework is sound, check:
 
 - This framework was developed through structured brainstorming + a 5-reviewer adversarial
   panel with completeness audit and supreme judge arbitration
-- The 39-issue registry is comprehensive but not exhaustive — new failure modes emerge
-  with new data sources and user patterns
+- v2.0 incorporates findings from 25+ research papers (2023-2026) and competitive analysis
+  of 15 existing skills/tools in the ecosystem
 - The "inversion principle" is the single highest-value insight: anomaly detection is
   more tractable than comprehensive verification
 - Always start with user research before building trust features — the assumption that
   "more evidence = more trust" is testable and may be wrong
+- No existing tool in the Claude Code ecosystem provides general-purpose trust evaluation —
+  this skill fills that gap
 
 ## References
 
-- Full analysis document: `~/Documents/brainstorm/monks_iq_complete_analysis.md`
+### Analysis Documents
+- Full analysis: `~/Documents/brainstorm/monks_iq_complete_analysis.md`
 - Review panel report: `~/Documents/brainstorm/monks_iq_trust_framework_review.md`
-- Research methodology: ChatEval (ICLR 2024), AutoGen, Du et al. (ICML 2024),
+
+### Key Research Papers
+- FActScore — Min et al., EMNLP 2023 (atomic fact evaluation)
+- SAFE — Wei et al., NeurIPS 2024 (search-augmented factual evaluation)
+- Semantic Entropy — Kuhn et al., Nature 2024 (hallucination detection via meaning clusters)
+- Semantic Entropy Probes — Kossen et al., ICLR 2025 (cheap single-pass uncertainty)
+- RAGAS — Shahul Es et al., EACL 2024 (RAG faithfulness metric)
+- TrustLLM — Huang et al., ICML 2024 (6-dimension trustworthiness benchmark)
+- TrustScore/TrustBC — Kim et al., 2024 (behavioral consistency for reference-free trust)
+- Molecular Facts — Kamoi et al., 2024 (decontextualized atomic claims)
+- MAFC — Scientific Reports 2026 (credibility-weighted multi-agent fact-checking)
+- DelphiAgent — Information Processing & Management 2025 (cognition/decision split)
+- FACT-AUDIT — ACL 2025 (importance-sampling-driven evaluation)
+- Fact-Saboteurs — Abdelnabi & Fritz, USENIX Security 2023 (adversarial attack taxonomy)
+- AdvERSEM — *SEM 2025 (adversarial robustness for groundedness evaluators)
+- QA-Calibration — ICLR 2025 (calibrated confidence with statistical guarantees)
+- ELM for AIGC Trust — Emerald 2025 (dual-track trust UX: expert vs casual users)
+- Decomposition Dilemmas — EMNLP 2025 (adaptive decomposition: helps complex, hurts simple)
+- DecMetrics — 2025 (decomposition quality validation)
+- FACTS Leaderboard — Google DeepMind 2025 (comprehensive factuality benchmark)
+
+### Review Panel Methodology
+- ChatEval (ICLR 2024), AutoGen, Du et al. (ICML 2024),
   MachineSoM (ACL 2024), DebateLLM
