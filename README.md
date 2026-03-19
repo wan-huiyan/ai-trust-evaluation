@@ -63,77 +63,92 @@ No existing Claude Code skill or tool provides a general-purpose AI trust evalua
 ### Open-Source Tools Referenced
 [FActScore](https://github.com/shmsw25/FActScore) | [SAFE](https://github.com/google-deepmind/long-form-factuality) | [MiniCheck](https://github.com/Liyan06/MiniCheck) | [RAGAS](https://github.com/explodinggradients/ragas) | [LangSmith](https://github.com/langchain-ai/langsmith-sdk)
 
-## Example Output
+## Example: What a Session Looks Like
 
-When you invoke this skill (e.g., "how do we make users trust our AI-extracted insights?"), it produces structured analysis like:
+Here's a real interaction showing how the skill adapts to a specific product (a web intelligence tool for consultants):
 
 <details>
-<summary><b>Strategy Taxonomy (17 strategies across 3 layers)</b></summary>
+<summary><b>Phase 0: Auto-Detect</b> — scans your project before asking anything</summary>
 
-```
-Layer 1: Claim-Level Intelligence (Backend)
-├── 1. Claim Decomposition + Atomic Verification
-├── 2. Multi-Source Corroboration Scoring
-├── 3. Source Authority Weighting
-├── 4. Internal Consistency Checks
-├── 5. Temporal Freshness Signals
-├── 6. Stratify by Fact Type
-└── 7. Authoritative Database Cross-Referencing
-
-Layer 2: Trust UX (Frontend Dashboard)
-├── 8.  Epistemic Status Labels ("Well-established fact", "Emerging signal", ...)
-├── 9.  Provenance Graph
-├── 10. Three-Tier Visual Hierarchy
-├── 11. "What We Don't Know" Section
-├── 12. Run-over-Run Stability Signals
-├── 13. Confidence Decay
-└── 14. Adversarial Counter-Evidence
-
-Layer 3: Continuous Calibration (Feedback Loop)
-├── 15. Synthetic Ground Truth Testing
-├── 16. User Correction Feedback Loop
-└── 17. Sampling Audits
-```
+> I scanned your project and found:
+> - **Web extraction signals**: `httpx`, `beautifulsoup`, `extract`, `crawl` detected
+> - **LLM generation**: `anthropic`, `claude`, `prompt` in pipeline code
+> - **Dashboard UI**: React components in `src/dashboard/`
+> - **Existing trust mechanisms**: `source_url` field in API responses, citation links in UI
+>
+> It looks like you're extracting from the web via LLM, with citations already in place.
+> Source independence and syndication detection are likely your biggest gaps. Let me
+> confirm a few things...
 </details>
 
 <details>
-<summary><b>39-Issue Registry (sample)</b></summary>
+<summary><b>Phase 1: Targeted Questions</b> — only asks what it couldn't figure out</summary>
 
-| # | Issue | Category | Severity |
-|---|-------|----------|----------|
-| 1 | Source independence unaddressed — syndicated content inflates corroboration | Backend | Critical |
-| 2 | No scoring functions or calibration protocols defined | Backend | Critical |
-| 3 | Cognitive overload — 17 simultaneous trust signals paralyze users | UX | High |
-| 4 | No adversarial threat model for SEO manipulation or planted misinfo | Security | High |
-| 5 | "What We Don't Know" — most novel idea, but undefined implementation | UX | Medium |
-| ... | *34 more issues across all layers* | | |
+> **What output types do users consume?**
+> - (a) Hard facts (revenue, HQ, founding year)
+> - (b) Synthesized insights (competitive positioning, market trends)
+> - (c) Recommendations or predictions
+> - (d) Mix — roughly what %?
+
+*User: "Mix — 30% hard facts, 60% synthesized, 10% predictions"*
+
+> **Who are the primary users?**
+
+*User: "Consultants who present findings to their clients"*
 </details>
 
 <details>
-<summary><b>Implementation Roadmap</b></summary>
+<summary><b>Phase 2: Tailored Diagnosis</b> — maps YOUR situation to the issue registry</summary>
 
-```
-Phase 0: Prerequisites (before building anything)
-  → User research: what trust signals do YOUR users actually want?
-  → Dependency graph: which strategies depend on which?
-  → Source independence detection (unsolved prerequisite for corroboration)
+> ### Your Top 5 Failure Modes (from the 39-issue registry)
+>
+> 1. **Syndication inflation** (Critical) — Your web extraction pipeline pulls from
+>    news sites that syndicate press releases. "Confirmed by 5 sources" may really
+>    be 1 press release reprinted 5 times.
+>
+> 2. **Streetlight effect** (High) — Authoritative DB cross-ref only covers your 30%
+>    hard facts. The 60% synthesized insights — where consultants need trust most —
+>    have no verification pathway.
+>
+> 3. **Export gap** (High) — Consultants need trust metadata in PowerPoint/PDF for
+>    client presentations. Dashboard-only trust signals disappear when exported.
+>
+> 4. **[2 more specific to their architecture...]**
+>
+> ### Strategy Fit for Your Product
+>
+> | Strategy | Fit | Why |
+> |----------|-----|-----|
+> | "What We Don't Know" section | **High** | Consultants presenting to clients NEED to show gaps |
+> | Source independence detection | **High** | Web extraction = syndication problem |
+> | Semantic entropy | **High** | Your LLM synthesis step is where hallucinations enter |
+> | Provenance graph | **Low** | Consultants won't click through — they need exportable proof |
+> | Confidence decay | **Low** | Reports are point-in-time deliverables, not live dashboards |
+</details>
 
-Phase 1: Ship 4 high-ROI items
-  → Verified badges (authoritative DB cross-ref) — trust anchor via halo effect
-  → "What We Don't Know" section — paradoxically increases trust
-  → Temporal freshness signals — low-cost, high-signal
-  → Composite trust score — the "Bloomberg number" for executives
+<details>
+<summary><b>Phase 3: Tailored Roadmap</b> — what to build, what to skip</summary>
 
-Phase 2: Corroboration + Calibration
-  → Claim decomposition pipeline
-  → Multi-source corroboration (only after source independence is solved)
-  → Synthetic ground truth testing
-
-Phase 3: Advanced UX + Feedback
-  → Epistemic status labels
-  → User correction loop
-  → Confidence decay
-```
+> ### Quick Wins (ship this sprint)
+> 1. **"What We Don't Know" section** — surface gaps per report. Consultants will
+>    love this: "We could not find revenue data from the last 12 months" builds
+>    credibility with their clients.
+> 2. **Temporal freshness badges** — tag every claim with source date. Near-free.
+>
+> ### Phase 1: Consultant Trust Anchor
+> - Verified badges for hard facts (SEC/Crunchbase cross-ref)
+> - Export-friendly trust metadata (badges, freshness, gaps survive PDF export)
+> - Composite trust score per insight section
+>
+> ### Phase 2: Synthesized Insight Verification
+> - Source independence detection (embedding clustering before corroboration)
+> - SAFE pipeline for per-claim verification of synthesized insights
+> - Semantic entropy on LLM synthesis step as "likely wrong" detector
+>
+> ### What NOT to Build
+> - **Provenance graph** — low ROI for consultant workflow
+> - **Confidence decay** — irrelevant for point-in-time reports
+> - **User correction loop** — <2% adoption without incentives; defer
 </details>
 
 ## Key Insights
