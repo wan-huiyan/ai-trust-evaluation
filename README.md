@@ -1,6 +1,31 @@
 # AI Trust Evaluation - Claude Code Skill
 
-A Claude Code skill for evaluating and designing trust/accuracy frameworks for AI systems that extract, synthesize, or generate intelligence from uncontrolled sources (open web, public data, multi-source RAG).
+An **interactive diagnostic skill** for evaluating and designing trust/accuracy frameworks for AI systems that extract, synthesize, or generate intelligence from uncontrolled sources (open web, public data, multi-source RAG).
+
+Unlike a static reference doc, this skill **actively diagnoses your specific situation** — it scans your codebase for trust-relevant signals, asks targeted questions about your product and users, then produces a tailored action plan with only the strategies that apply to you.
+
+## How It Works
+
+```
+Phase 0: Auto-Detect     → Scans your project for trust-relevant code, existing
+                            mechanisms, and product signals (web extraction, RAG,
+                            LLM generation, dashboard UI, etc.)
+
+Phase 1: Understand       → Asks 3-5 targeted questions (skipping what Phase 0
+                            already answered) about your product, users, and
+                            current trust mechanisms
+
+Phase 2: Diagnose         → Maps your situation against a 39-issue registry and
+                            17-strategy taxonomy. Identifies YOUR specific failure
+                            modes, not generic ones.
+
+Phase 3: Recommend        → Produces a phased roadmap with quick wins, what to
+                            build, what NOT to build, and which research papers
+                            apply to your architecture
+
+Phase 4: Deep Dive        → Optional: implementation details for any strategy,
+                            or stress-test via agent-review-panel
+```
 
 ## When to Use
 
