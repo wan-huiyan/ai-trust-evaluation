@@ -163,12 +163,16 @@ Here's a real interaction showing how the skill adapts to a specific product (a 
 
 ### Claude Code
 
+**Option 1: Plugin install (recommended)**
 ```bash
-# Clone to your skills directory
-git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.claude/skills/ai-trust-evaluation
+/plugin marketplace add wan-huiyan/ai-trust-evaluation
+/plugin install ai-trust-evaluation@wan-huiyan-ai-trust-evaluation
 ```
 
-Or manually copy `SKILL.md` to `~/.claude/skills/ai-trust-evaluation/SKILL.md`.
+**Option 2: Git clone**
+```bash
+git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.claude/skills/ai-trust-evaluation
+```
 
 ### Cursor
 

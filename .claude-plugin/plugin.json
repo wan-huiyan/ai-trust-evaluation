@@ -1,0 +1,12 @@
+{
+  "name": "ai-trust-evaluation",
+  "version": "3.0.0",
+  "description": "Evaluate and design trust/accuracy frameworks for AI systems that extract intelligence from uncontrolled sources",
+  "author": {
+    "name": "wan-huiyan",
+    "url": "https://github.com/wan-huiyan"
+  },
+  "repository": "https://github.com/wan-huiyan/ai-trust-evaluation",
+  "license": "MIT",
+  "keywords": ["trust", "evaluation", "accuracy", "grounding", "fact-checking", "ai-safety"]
+}
