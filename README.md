@@ -161,12 +161,35 @@ Here's a real interaction showing how the skill adapts to a specific product (a 
 
 ## Installation
 
+### Claude Code
+
 ```bash
-# Clone to your Claude Code skills directory
+# Clone to your skills directory
 git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.claude/skills/ai-trust-evaluation
 ```
 
 Or manually copy `SKILL.md` to `~/.claude/skills/ai-trust-evaluation/SKILL.md`.
+
+### Cursor
+
+Cursor supports skills via `~/.cursor/skills/` (Cursor 2.4+), though global discovery can be flaky. Options from most to least reliable:
+
+**Option 1: Per-project rule (most reliable)**
+```bash
+mkdir -p .cursor/rules
+# Create .cursor/rules/ai-trust-evaluation.mdc with the content of SKILL.md
+# Add frontmatter: alwaysApply: true
+```
+
+**Option 2: npx skills CLI**
+```bash
+npx skills add wan-huiyan/ai-trust-evaluation --global
+```
+
+**Option 3: Manual global install**
+```bash
+git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.cursor/skills/ai-trust-evaluation
+```
 
 ## Origin
 
