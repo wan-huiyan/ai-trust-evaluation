@@ -12,10 +12,11 @@ description: |
   Covers: the trust taxonomy (relational vs informational), the inversion principle,
   source independence detection, failure mode analysis, persona-based trust UX,
   the 39-issue registry of common pitfalls, and research-backed implementation
-  techniques from FActScore, SAFE, Semantic Entropy, and RAGAS.
+  techniques from FActScore, SAFE, Semantic Entropy, RAGAS v0.4+, DeepEval, HHEM,
+  Lynx, RefChecker, ChainPoll, and HELM.
 author: wan-huiyan
-version: 3.0.0
-date: 2026-03-19
+version: 4.0.0
+date: 2026-03-23
 ---
 
 # AI Trust Evaluation Framework
@@ -248,14 +249,27 @@ Decompose → Generate search queries → Verify against search results.
 Open-source: `github.com/google-deepmind/long-form-factuality`
 Outperforms human annotators (wins 76% of disagreement cases) at 20x lower cost.
 
-**Grounding metric — RAGAS Faithfulness** (EACL 2024):
+**Grounding metric — RAGAS Faithfulness** (EACL 2024, now v0.4+):
 Fraction of claims supported by retrieved context. Implementation: decompose answer
 into claims, check each against context using NLI. Achieved 0.762 precision for
-hallucination detection.
+hallucination detection. RAGAS v0.4+ significantly expands scope beyond RAG:
+multimodal evaluation (Multimodal Faithfulness, Multimodal Relevance), agent/tool
+evaluation (ToolCallAccuracy, ToolCallF1), multi-turn conversation evaluation, and
+a new `EvaluationDataset` API (replaces HuggingFace Datasets dependency).
 
 **Key finding:** Don't rely on a single hallucination detector. EMNLP 2025 Industry
 benchmarking found average balanced accuracy below 78% for any single method.
 **Ensemble multiple methods** (RAGAS + self-eval + TrustBC) and take conservative estimate.
+
+**Fast-pass detection — HHEM** (Vectara, 3.2k stars):
+For high-throughput scenarios, HHEM-2.1-Open provides lightweight hallucination scoring without requiring an LLM judge. Measures factual consistency in summarization by comparing generated text against source documents. Use as a cheap first-pass filter before expensive LLM-based verification. The Vectara Hallucination Leaderboard benchmarks 100+ models on 7,700+ articles, finding hallucination rates range from <2% to >24% across models — useful for model selection decisions.
+
+**Specialized detection models:**
+- **Lynx** (Patronus AI, 2024): First open-source model beating GPT-4 on hallucination detection (8.3% more accurate on medical QA). Fine-tuned Llama-3 70B/8B variants for RAG faithfulness evaluation. Benchmark: HaluBench (15k samples). Use for high-stakes domains. (arXiv:2407.08488)
+- **RefChecker** (Amazon Science, 2024): Decomposes responses into knowledge triplets `<subject, predicate, object>`, verifies each independently. Outperforms existing methods by up to 9 points. Best when you need to pinpoint *which specific facts* are wrong, not just binary faithful/hallucinated. (arXiv:2405.14486)
+
+**Practical tooling — DeepEval** (14.2k stars, larger than RAGAS):
+Provides 30+ pre-built metrics including FaithfulnessMetric, HallucinationMetric, and G-Eval (LLM-as-judge with CoT). Key advantage over RAGAS: debuggable/inspectable LLM judge reasoning, native Pytest integration for CI/CD, and the DAG metric builder for custom deterministic evaluation graphs. Use DeepEval when you need production CI/CD integration; use RAGAS when you need research-grade RAG-specific metrics.
 
 #### Step 3: Source Independence Check
 
@@ -306,6 +320,8 @@ coverage probabilities (QA-Calibration, ICLR 2025).
 **TrustBC** (Kim et al., 2024): Generate multi-choice distractors from the LLM's own
 response, re-query whether it selects its original answer. Low consistency = low trust.
 This is a cheap, reference-free signal that doesn't require external knowledge.
+
+**ChainPoll** (Galileo, 2023): Chain-of-thought prompting + multi-sample voting (typically 20 samples) for hallucination detection. Aggregating multiple CoT judgments significantly improves reliability over single-pass evaluation. Complementary to TrustBC — ChainPoll uses explicit reasoning chains while TrustBC uses behavioral probing. (arXiv:2310.18344)
 
 #### Step 7: Adversarial Robustness Testing
 
@@ -443,10 +459,30 @@ To verify a trust framework is sound, check:
 |------|-------------|-----|
 | SAFE | Decompose → search → verify pipeline | github.com/google-deepmind/long-form-factuality |
 | FActScore | Atomic fact evaluation | github.com/shmsw25/FActScore |
-| RAGAS | RAG evaluation (faithfulness, relevance) | github.com/explodinggradients/ragas |
+| RAGAS | RAG evaluation (faithfulness, relevance); 13.1k stars, v0.4+ now covers RAG + agents + multimodal | github.com/explodinggradients/ragas |
 | TrustLLM | 6-dimension trustworthiness benchmark | github.com/HowieHwong/TrustLLM |
 | FACTS Leaderboard | Comprehensive factuality benchmark | kaggle.com/benchmarks/google/facts |
 | FactBench | Dynamic in-the-wild factuality eval | arxiv.org/abs/2410.22257 |
+| DeepEval | 30+ LLM evaluation metrics; Pytest-native CI/CD | github.com/confident-ai/deepeval |
+| Vectara Hallucination Leaderboard | Model hallucination rate ranking (100+ models, 7.7k articles) | github.com/vectara/hallucination-leaderboard |
+| HHEM-2.1-Open | Lightweight hallucination scoring model (no LLM judge needed) | huggingface.co/vectara/hallucination_evaluation_model |
+| HELM | Holistic model evaluation (safety, factuality, calibration) | github.com/stanford-crfm/helm |
+
+**Benchmarking guidance — HELM** (Stanford CRFM, 2.7k stars, v0.5.13):
+For holistic model evaluation covering trust dimensions (accuracy, calibration, robustness, fairness, toxicity), use Stanford HELM. Key leaderboards: HELM Capabilities (MMLU-Pro, GPQA, IFEval), HELM Safety v1.0 (HarmBench — Claude 3.5 Sonnet ranked highest), HELM Lite (lightweight task mix), and MedHELM (medical domain). Use when selecting which base LLM to recommend for a trust-sensitive application.
+
+### Recommended Evaluation Pipeline (Tiered)
+
+For production systems, use a tiered approach that balances cost and thoroughness:
+
+| Tier | Method | Cost | When to Use |
+|------|--------|------|-------------|
+| 1 (Fast) | HHEM-2.1-Open or Lynx-8B | Low | All outputs — binary faithful/hallucinated filter |
+| 2 (Scored) | DeepEval FaithfulnessMetric or RAGAS Faithfulness | Medium | Outputs passing Tier 1 — scored evaluation with reasoning |
+| 3 (Granular) | RefChecker triplet extraction | High | High-stakes outputs — pinpoint specific hallucinated claims |
+| 4 (High-confidence) | ChainPoll (20 CoT samples + majority vote) or Semantic Entropy | Expensive | Critical decisions — maximum detection confidence |
+
+Route outputs through tiers based on stakes: low-stakes content stops at Tier 1-2, high-stakes content goes through all tiers. This prevents the common failure of applying expensive verification uniformly (wasteful) or skipping it entirely (dangerous).
 
 ### References
 
@@ -469,3 +505,11 @@ To verify a trust framework is sound, check:
 - Decomposition Dilemmas — EMNLP 2025 (adaptive decomposition: helps complex, hurts simple)
 - DecMetrics — 2025 (decomposition quality validation)
 - FACTS Leaderboard — Google DeepMind 2025 (comprehensive factuality benchmark)
+- Lynx — Ravi et al., arXiv 2024 (open-source hallucination detection beating GPT-4)
+- RefChecker — Hu et al., arXiv 2024 (knowledge-triplet verification)
+- ChainPoll — Friel & Sanyal, arXiv 2023 (multi-sample CoT hallucination detection)
+- OpenFactCheck — Wang et al., COLING 2025 (customizable fact-checking framework)
+- FactCheck-Bench — Wang et al., EMNLP 2024 Findings (multi-level annotation benchmark)
+- HELM — Liang et al., arXiv 2022 (holistic language model evaluation, continuously updated)
+- "LLM Hallucination: A Comprehensive Survey" — arXiv 2025 (arXiv:2510.06265)
+- EdinburghNLP awesome-hallucination-detection — curated paper list (github.com/EdinburghNLP/awesome-hallucination-detection)

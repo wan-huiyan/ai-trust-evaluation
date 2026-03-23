@@ -51,17 +51,29 @@ A 7-step pipeline grounded in 25+ academic papers:
 
 1. **Claim Decomposition** — break outputs into atomic, verifiable claims ([FActScore](https://arxiv.org/abs/2305.14251), [Molecular Facts](https://arxiv.org/abs/2406.20317), [Adaptive Decomposition](https://arxiv.org/abs/2501.00085))
 2. **Per-Claim Verification** — search-augmented fact-checking for each claim ([SAFE pipeline](https://arxiv.org/abs/2403.18802) from Google DeepMind)
+2.5. **Fast-Pass Hallucination Detection** — lightweight first-pass filtering using [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) (Vectara) or [Lynx](https://arxiv.org/abs/2407.08488) (Patronus AI, beats GPT-4 on HaluBench). Use [DeepEval](https://github.com/confident-ai/deepeval) (14.2k ⭐) or [RAGAS v0.4+](https://github.com/explodinggradients/ragas) (13.1k ⭐) for scored evaluation with reasoning.
 3. **Source Independence Detection** — near-duplicate clustering + citation graph analysis to avoid counting syndicated content as corroboration ([MAFC](https://arxiv.org/abs/2305.13281))
 4. **Corroboration Scoring** — credibility-weighted aggregation across truly independent sources
 5. **Uncertainty Quantification** — semantic entropy to detect hallucinations without ground truth ([Semantic Entropy](https://www.nature.com/articles/s41586-024-07421-0), Nature 2024)
 6. **Behavioral Consistency** — reference-free trust signal via multi-run stability ([TrustBC](https://arxiv.org/abs/2404.13782))
 7. **Adversarial Robustness** — defend against the [Fact-Saboteurs](https://www.usenix.org/conference/usenixsecurity23/presentation/bao) taxonomy of attacks (USENIX Security 2023)
 
+### New in v4.0.0
+
+- **Tiered Evaluation Pipeline** — 4-tier cost/thoroughness routing: HHEM fast-pass → DeepEval/RAGAS scored → RefChecker granular → ChainPoll/Semantic Entropy high-confidence
+- **DeepEval integration** (14.2k ⭐) — 30+ metrics, Pytest-native CI/CD, debuggable LLM judge reasoning
+- **Vectara Hallucination Leaderboard** — model selection based on hallucination rates across 100+ models
+- **Lynx** — first open-source model beating GPT-4 on hallucination detection (HaluBench)
+- **RefChecker** — knowledge-triplet verification for pinpointing specific hallucinated claims
+- **ChainPoll** — multi-sample CoT voting for high-confidence detection
+- **HELM benchmarks** — holistic model evaluation for trust-sensitive applications
+- **RAGAS v0.4+** — updated coverage including multimodal, agent, and multi-turn evaluation
+
 ### Competitive Landscape
 No existing Claude Code skill or tool provides a general-purpose AI trust evaluation framework. This skill uniquely combines claim-level verification, trust UX design, and continuous calibration into a single reusable framework.
 
 ### Open-Source Tools Referenced
-[FActScore](https://github.com/shmsw25/FActScore) | [SAFE](https://github.com/google-deepmind/long-form-factuality) | [MiniCheck](https://github.com/Liyan06/MiniCheck) | [RAGAS](https://github.com/explodinggradients/ragas) | [LangSmith](https://github.com/langchain-ai/langsmith-sdk)
+[FActScore](https://github.com/shmsw25/FActScore) | [SAFE](https://github.com/google-deepmind/long-form-factuality) | [RAGAS v0.4+](https://github.com/explodinggradients/ragas) (13.1k ⭐) | [DeepEval](https://github.com/confident-ai/deepeval) (14.2k ⭐) | [Lynx](https://huggingface.co/PatronusAI/Llama-3-Patronus-Lynx-70B-Instruct) | [RefChecker](https://github.com/amazon-science/RefChecker) | [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) | [HELM](https://github.com/stanford-crfm/helm) (2.7k ⭐) | [Vectara Leaderboard](https://github.com/vectara/hallucination-leaderboard) (3.2k ⭐)
 
 ## Example: What a Session Looks Like
 
@@ -211,6 +223,21 @@ v2.0 was enhanced through deep research across 25+ academic papers and competiti
 | [TrustBC](https://arxiv.org/abs/2404.13782) | 2024 | Behavioral consistency as reference-free trust signal |
 | [Fact-Saboteurs](https://www.usenix.org/conference/usenixsecurity23/presentation/bao) | USENIX Security 2023 | Adversarial attack taxonomy for fact-checking |
 | [ELM Trust UX](https://doi.org/10.1108/INTR-2024-ELM) | Emerald 2025 | Persona-based trust interface design |
+| [DeepEval](https://github.com/confident-ai/deepeval) | 2024 | 30+ LLM evaluation metrics with Pytest-native CI/CD |
+| [Lynx](https://arxiv.org/abs/2407.08488) | 2024 | Open-source hallucination detector beating GPT-4 |
+| [RefChecker](https://arxiv.org/abs/2405.14486) | 2024 | Knowledge-triplet verification (Amazon Science) |
+| [ChainPoll](https://arxiv.org/abs/2310.18344) | 2023 | Multi-sample CoT hallucination detection |
+| [HELM](https://github.com/stanford-crfm/helm) | 2022+ | Holistic model evaluation (Stanford CRFM) |
+| [Vectara HHEM](https://github.com/vectara/hallucination-leaderboard) | 2024+ | Hallucination leaderboard: 100+ models, 7.7k articles |
+
+## Version History
+
+| Version | Changes |
+|---------|---------|
+| 4.0.0 | Tiered evaluation pipeline, DeepEval, HHEM/Vectara leaderboard, Lynx, RefChecker, ChainPoll, HELM, RAGAS v0.4+ |
+| 3.0.0 | Research-backed 7-step pipeline, 25+ papers, adaptive decomposition, molecular facts |
+| 2.0.0 | Research-backed implementation pipeline, semantic entropy, adversarial robustness |
+| 1.0.0 | Initial release: trust taxonomy, 17 strategies, 39-issue registry |
 
 ## License
 

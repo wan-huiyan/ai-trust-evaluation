@@ -1,12 +1,12 @@
 {
   "name": "ai-trust-evaluation",
-  "version": "3.0.0",
-  "description": "Evaluate and design trust/accuracy frameworks for AI systems that extract intelligence from uncontrolled sources",
+  "version": "4.0.0",
+  "description": "Evaluate and design trust/accuracy frameworks for AI systems that extract intelligence from uncontrolled sources. Covers FActScore, SAFE, Semantic Entropy, RAGAS v0.4+, DeepEval, HHEM, Lynx, RefChecker, ChainPoll, and HELM.",
   "author": {
     "name": "wan-huiyan",
     "url": "https://github.com/wan-huiyan"
   },
   "repository": "https://github.com/wan-huiyan/ai-trust-evaluation",
   "license": "MIT",
-  "keywords": ["trust", "evaluation", "accuracy", "grounding", "fact-checking", "ai-safety"]
+  "keywords": ["trust", "evaluation", "accuracy", "grounding", "fact-checking", "ai-safety", "deepeval", "hallucination-detection", "helm", "ragas"]
 }

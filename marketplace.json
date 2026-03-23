@@ -11,7 +11,7 @@
       "name": "ai-trust-evaluation",
       "source": ".",
       "description": "Evaluate and design trust/accuracy frameworks for AI systems",
-      "version": "3.0.0"
+      "version": "4.0.0"
     }
   ]
 }
