@@ -1,0 +1,471 @@
+{
+  "skill_name": "ai-trust-evaluation",
+  "version": "1.0.0",
+  "created_by": "manual",
+  "triggers": [
+    {
+      "id": "pos-1",
+      "prompt": "Our AI product generates summaries from web sources and users don't trust them. How do we fix this?",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Direct use case: AI-generated outputs from web, trust problem"
+    },
+    {
+      "id": "pos-2",
+      "prompt": "How do we make users trust our AI outputs? We're building a research assistant.",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Exact trigger phrase from description: how do we make users trust our AI outputs"
+    },
+    {
+      "id": "pos-3",
+      "prompt": "We need a confidence scoring framework for our RAG pipeline that pulls from the open web",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Confidence scoring + RAG + open web — direct match"
+    },
+    {
+      "id": "pos-4",
+      "prompt": "Evaluate whether our proposed trust framework for the intelligence dashboard will actually work",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Direct trigger: evaluating whether a proposed trust framework will work"
+    },
+    {
+      "id": "pos-5",
+      "prompt": "We're building an AI that synthesizes information from multiple public data sources — how do we verify accuracy?",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Synthesize + multiple sources + accuracy verification"
+    },
+    {
+      "id": "pos-6",
+      "prompt": "Citations aren't enough for our users — they still don't trust the AI output. What else can we do?",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Direct trigger: citations alone aren't sufficient"
+    },
+    {
+      "id": "pos-7",
+      "prompt": "Design a trust UX for our AI product that extracts intelligence from uncontrolled web sources",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Trust UX + uncontrolled sources — core domain"
+    },
+    {
+      "id": "pos-8",
+      "prompt": "Build an evaluation pipeline for our web-extracted intelligence system",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Direct trigger: building evaluation pipelines for web-extracted intelligence"
+    },
+    {
+      "id": "pos-9",
+      "prompt": "What's the difference between relational and informational trust in AI systems?",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Trust taxonomy question — covered by the skill"
+    },
+    {
+      "id": "pos-10",
+      "prompt": "We're using FActScore but it's not catching all the hallucinations. What else should we look at?",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "References specific technique (FActScore) covered by skill"
+    },
+    {
+      "id": "pos-11",
+      "prompt": "Our multi-source RAG system needs better grounding — classic RAG techniques don't work because it's the open web",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Direct trigger: classic RAG grounding doesn't apply, open web corpus"
+    },
+    {
+      "id": "pos-12",
+      "prompt": "Help me design a verification system for AI-generated reports that pull from public data",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Verification + AI-generated + public data"
+    },
+    {
+      "id": "pos-13",
+      "prompt": "What are the common pitfalls when building trust in AI systems? I want a systematic checklist.",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "References the 39-issue registry of common pitfalls"
+    },
+    {
+      "id": "pos-14",
+      "prompt": "We need to compare RAGAS vs DeepEval vs HELM for our evaluation pipeline",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "References specific tools covered by the skill"
+    },
+    {
+      "id": "pos-15",
+      "prompt": "How do we detect when our AI is citing sources that all say the same thing because they copy each other?",
+      "should_trigger": true,
+      "category": "positive",
+      "notes": "Source independence detection — core skill concept"
+    },
+    {
+      "id": "neg-1",
+      "prompt": "Review this Python function for bugs",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Code review, not trust evaluation"
+    },
+    {
+      "id": "neg-2",
+      "prompt": "Help me fine-tune a language model on my dataset",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "ML training, not trust/accuracy framework"
+    },
+    {
+      "id": "neg-3",
+      "prompt": "Build a RAG pipeline with LangChain and Pinecone for our internal knowledge base",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "RAG implementation with controlled corpus — classic RAG, not open web trust"
+    },
+    {
+      "id": "neg-4",
+      "prompt": "Our users don't trust the UI — the buttons are confusing and the layout is bad",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "'Trust' keyword but UX/UI problem, not AI output trust"
+    },
+    {
+      "id": "neg-5",
+      "prompt": "Set up authentication and authorization for our API",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Security trust (authn/authz), not AI output trust"
+    },
+    {
+      "id": "neg-6",
+      "prompt": "Write unit tests for our data pipeline",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Software testing, not AI evaluation"
+    },
+    {
+      "id": "neg-7",
+      "prompt": "Help me implement a chatbot using the Claude API",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Chatbot building, not trust evaluation"
+    },
+    {
+      "id": "neg-8",
+      "prompt": "Optimize my SQL query for the analytics dashboard",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "SQL optimization, wrong domain"
+    },
+    {
+      "id": "neg-9",
+      "prompt": "Evaluate this ML model's performance — show me precision, recall, and F1",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Standard ML evaluation, not trust framework design"
+    },
+    {
+      "id": "neg-10",
+      "prompt": "How do I make my website load faster? Users don't trust slow sites.",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "'Trust' keyword but web performance problem"
+    },
+    {
+      "id": "neg-11",
+      "prompt": "Deploy a vector database for semantic search",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Infrastructure setup, not trust design"
+    },
+    {
+      "id": "neg-12",
+      "prompt": "Create a skill that helps with code reviews",
+      "should_trigger": false,
+      "category": "negative",
+      "notes": "Skill creation, not trust evaluation"
+    },
+    {
+      "id": "edge-1",
+      "prompt": "Our RAG system is hallucinating — how do we detect and prevent this?",
+      "should_trigger": true,
+      "category": "edge",
+      "notes": "Hallucination detection overlaps with trust evaluation, especially if open-web RAG"
+    },
+    {
+      "id": "edge-2",
+      "prompt": "We need to verify that our AI's answers are actually correct",
+      "should_trigger": true,
+      "category": "edge",
+      "notes": "Verification/accuracy is core to the skill, even without 'trust' keyword"
+    },
+    {
+      "id": "edge-3",
+      "prompt": "How reliable are AI-generated citations?",
+      "should_trigger": true,
+      "category": "edge",
+      "notes": "Citation reliability is a subset of trust evaluation"
+    },
+    {
+      "id": "edge-4",
+      "prompt": "Evaluate the accuracy of our internal knowledge base chatbot",
+      "should_trigger": false,
+      "category": "edge",
+      "notes": "Internal/controlled corpus — classic RAG, not open-web trust. Borderline."
+    },
+    {
+      "id": "edge-5",
+      "prompt": "I'm worried about bias in our AI system — how do we audit it?",
+      "should_trigger": false,
+      "category": "edge",
+      "notes": "Bias audit is adjacent but not the same as trust/accuracy framework"
+    },
+    {
+      "id": "edge-6",
+      "prompt": "Should we use Semantic Entropy or ChainPoll for our verification pipeline?",
+      "should_trigger": true,
+      "category": "edge",
+      "notes": "References specific techniques from the skill's coverage"
+    },
+    {
+      "id": "edge-7",
+      "prompt": "Our AI agent searches the web and summarizes findings — users keep asking 'how do you know this?'",
+      "should_trigger": true,
+      "category": "edge",
+      "notes": "Web search + trust signal ('how do you know') without using 'trust' keyword"
+    },
+    {
+      "id": "edge-8",
+      "prompt": "We need better error handling when our LLM gives wrong answers",
+      "should_trigger": false,
+      "category": "edge",
+      "notes": "'Wrong answers' is close to accuracy, but this is error handling, not framework design"
+    }
+  ],
+  "test_cases": [
+    {
+      "id": "tc-1",
+      "prompt": "Our AI product pulls from public web sources and users don't trust the outputs. Evaluate our current approach and recommend improvements.",
+      "input_files": [],
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(trust|accuracy|verification|confidence)",
+          "description": "Addresses trust/accuracy directly"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(relational|informational|taxonomy)",
+          "description": "Uses the trust taxonomy framework"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(source|independence|corrobor)",
+          "description": "Discusses source independence"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(failure|pitfall|issue|risk)",
+          "description": "Identifies potential failure modes"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(FActScore|SAFE|RAGAS|DeepEval|HHEM|Lynx|RefChecker|ChainPoll|HELM|Semantic Entropy)",
+          "description": "References specific evaluation techniques"
+        }
+      ]
+    },
+    {
+      "id": "tc-2",
+      "prompt": "Design a confidence scoring system for our web intelligence platform",
+      "input_files": [],
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(confidence|score|level|grade)",
+          "description": "Proposes confidence scoring mechanism"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(source|evidence|verify)",
+          "description": "Ties confidence to evidence quality"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(UX|user|display|present|interface)",
+          "description": "Considers how to present confidence to users"
+        }
+      ]
+    },
+    {
+      "id": "tc-3",
+      "prompt": "Evaluate whether our proposed trust framework will actually work — we show citations and a confidence badge",
+      "input_files": [],
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(insufficient|not enough|beyond|more than|also need)",
+          "description": "Identifies gaps in the proposed approach"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(recommend|suggest|consider|add|improve)",
+          "description": "Provides concrete recommendations"
+        }
+      ]
+    },
+    {
+      "id": "tc-4",
+      "prompt": "What are the common pitfalls in building AI trust systems?",
+      "input_files": [],
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(pitfall|issue|mistake|trap|problem|anti.?pattern)",
+          "description": "Lists specific pitfalls"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(\\d+|several|many|common)",
+          "description": "Provides multiple items, not just one"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(inversion|independence|persona|failure)",
+          "description": "References core concepts from the skill"
+        }
+      ]
+    },
+    {
+      "id": "tc-5",
+      "prompt": "Compare RAGAS, DeepEval, and HELM for evaluating our AI outputs",
+      "input_files": [],
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)RAGAS",
+          "description": "Covers RAGAS"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)DeepEval",
+          "description": "Covers DeepEval"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)HELM",
+          "description": "Covers HELM"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(strength|weakness|pro|con|tradeoff|compare|vs|differ)",
+          "description": "Actually compares rather than just listing"
+        }
+      ]
+    },
+    {
+      "id": "tc-6",
+      "prompt": "How do we detect when our AI cites sources that all copy from each other?",
+      "input_files": [],
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(independence|independent|correlat|copy|duplicate|circular)",
+          "description": "Addresses source independence detection"
+        },
+        {
+          "type": "pattern",
+          "value": "(?i)(method|technique|approach|detect|check)",
+          "description": "Provides actionable detection methods"
+        }
+      ]
+    }
+  ],
+  "edge_cases": [
+    {
+      "id": "ec-1",
+      "prompt": "Trust",
+      "category": "minimal_input",
+      "expected_behavior": "Ask for context about what kind of trust problem",
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(what|which|context|tell me more|specific|describe)",
+          "description": "Asks for clarification"
+        }
+      ]
+    },
+    {
+      "id": "ec-2",
+      "prompt": "Evaluate trust for a system that only uses our internal proprietary database — no web sources",
+      "category": "out_of_scope",
+      "expected_behavior": "Acknowledge this is controlled corpus, may suggest classic RAG techniques instead",
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(internal|controlled|proprietary|RAG|different|scope)",
+          "description": "Recognizes controlled corpus vs open web distinction"
+        }
+      ]
+    },
+    {
+      "id": "ec-3",
+      "prompt": "We need a trust framework but we only have 2 weeks and no ML engineers",
+      "category": "constraint",
+      "expected_behavior": "Provide pragmatic, lightweight recommendations given constraints",
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(simple|quick|lightweight|start|priorit|minimum|pragmatic)",
+          "description": "Adapts recommendations to constraints"
+        }
+      ]
+    },
+    {
+      "id": "ec-4",
+      "prompt": "Our CEO wants a 'trust score' badge on every AI output — is that a good idea?",
+      "category": "stakeholder_request",
+      "expected_behavior": "Evaluate the idea critically using trust UX knowledge",
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(calibrat|meaningful|user|percei|mislead|careful|risk|depend)",
+          "description": "Evaluates the idea rather than just implementing it"
+        }
+      ]
+    },
+    {
+      "id": "ec-5",
+      "prompt": "Build a trust evaluation for our AI system that handles medical information",
+      "category": "high_stakes_domain",
+      "expected_behavior": "Heighten caution given medical domain",
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(medical|health|regulat|critical|high.?stakes|careful|risk|harm)",
+          "description": "Acknowledges the high-stakes nature of medical domain"
+        }
+      ]
+    },
+    {
+      "id": "ec-6",
+      "prompt": "We already use RAGAS 0.4 — what's missing from our evaluation?",
+      "category": "partial_coverage",
+      "expected_behavior": "Build on existing RAGAS setup, identify complementary techniques",
+      "assertions": [
+        {
+          "type": "pattern",
+          "value": "(?i)(addition|complement|also|beyond|gap|missing|combine)",
+          "description": "Identifies what RAGAS alone doesn't cover"
+        }
+      ]
+    }
+  ]
+}

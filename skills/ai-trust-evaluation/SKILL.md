@@ -8,12 +8,20 @@ description: |
   (3) designing confidence scoring, verification, or trust UX for an AI product,
   (4) evaluating whether a proposed trust framework will actually work,
   (5) someone asks "how do we make users trust our AI outputs?",
-  (6) building evaluation pipelines for web-extracted intelligence.
+  (6) building evaluation pipelines for web-extracted intelligence,
+  (7) detecting hallucinations in AI outputs from web sources,
+  (8) verifying AI accuracy or asking "how reliable are these AI citations?",
+  (9) sources copy each other and you need to detect circular or non-independent evidence,
+  (10) comparing evaluation tools like RAGAS vs DeepEval vs HELM for your pipeline.
+  Also trigger when users say "how do you know this is true?", "our AI keeps making things up",
+  "we need to verify accuracy", "are these citations reliable?", or "the AI is hallucinating".
   Covers: the trust taxonomy (relational vs informational), the inversion principle,
   source independence detection, failure mode analysis, persona-based trust UX,
   the 39-issue registry of common pitfalls, and research-backed implementation
   techniques from FActScore, SAFE, Semantic Entropy, RAGAS v0.4+, DeepEval, HHEM,
-  Lynx, RefChecker, ChainPoll, and HELM.
+  Lynx, RefChecker, ChainPoll, and HELM. Not for: internal knowledge base RAG with
+  controlled corpora (use standard RAG evaluation), bias auditing, or general ML model
+  evaluation (precision/recall/F1).
 author: wan-huiyan
 version: 4.0.0
 date: 2026-03-23
