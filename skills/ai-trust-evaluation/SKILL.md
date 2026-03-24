@@ -23,8 +23,18 @@ description: |
   controlled corpora (use standard RAG evaluation), bias auditing, or general ML model
   evaluation (precision/recall/F1).
 author: wan-huiyan
-version: 4.0.0
-date: 2026-03-23
+version: 4.1.0
+date: 2026-03-24
+dependencies:
+  required: [WebSearch, WebFetch, Read, Write]
+  optional: [Bash, Grep, Glob]
+scope: >
+  Operates on the user's current project or a described product. Does not modify
+  code — produces analysis, recommendations, and framework designs as markdown output.
+  Reads project files for context (Phase 0) but all changes are user-initiated.
+  Safe to run multiple times on the same project (idempotent — re-evaluates from scratch).
+input: User description of AI product, architecture, and trust concerns (or project files for auto-detection)
+output: Structured trust evaluation report with phased recommendations, technique comparisons, and implementation roadmap
 ---
 
 # AI Trust Evaluation Framework
