@@ -63,7 +63,7 @@ A 7-step pipeline grounded in 25+ academic papers:
 - **Progressive disclosure architecture** — SKILL.md is now a lean 216-line process document; knowledge base extracted to `references/` files loaded on-demand per phase
 - **Improved trigger accuracy** — precision 81.8%, recall 90.0% (up from 73.9%/85.0%) with stronger negative boundaries and natural-language trigger phrases
 - **Error handling & handoff points** — explicit behavior for minimal input, out-of-scope requests, and handoffs to agent-review-panel and deep-research
-- **Schliff-benchmarked** — composite score 80.4/100 across 7 dimensions, 34/38 eval assertions passing. Improved with [Schliff](https://github.com/claudio-silva/schliff), the disciplined skill improvement framework
+- **Schliff-benchmarked** — composite score 80.4/100 across 7 dimensions, 34/38 eval assertions passing. Improved with [Schliff](https://github.com/Zandereins/schliff), the disciplined skill improvement framework
 
 ### v4.0.0
 
@@ -241,7 +241,7 @@ v2.0 was enhanced through deep research across 25+ academic papers and competiti
 
 | Version | Changes |
 |---------|---------|
-| 5.0.0 | Progressive disclosure (SKILL.md 533→216 lines), `references/` extraction, improved triggers (precision 82%, recall 90%), error handling, [Schliff](https://github.com/claudio-silva/schliff)-benchmarked at 80.4/100 |
+| 5.0.0 | Progressive disclosure (SKILL.md 533→216 lines), `references/` extraction, improved triggers (precision 82%, recall 90%), error handling, [Schliff](https://github.com/Zandereins/schliff)-benchmarked at 80.4/100 |
 | 4.0.0 | Tiered evaluation pipeline, DeepEval, HHEM/Vectara leaderboard, Lynx, RefChecker, ChainPoll, HELM, RAGAS v0.4+ |
 | 3.0.0 | Research-backed 7-step pipeline, 25+ papers, adaptive decomposition, molecular facts |
 | 2.0.0 | Research-backed implementation pipeline, semantic entropy, adversarial robustness |
