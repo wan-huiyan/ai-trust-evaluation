@@ -1,4 +1,5 @@
 # AI Trust Evaluation - Claude Code Skill
+[![GitHub release](https://img.shields.io/github/v/release/wan-huiyan/ai-trust-evaluation)](https://github.com/wan-huiyan/ai-trust-evaluation/releases) [![Claude Code](https://img.shields.io/badge/Claude_Code-skill-orange)](https://claude.com/claude-code) [![license](https://img.shields.io/github/license/wan-huiyan/ai-trust-evaluation)](LICENSE) [![last commit](https://img.shields.io/github/last-commit/wan-huiyan/ai-trust-evaluation)](https://github.com/wan-huiyan/ai-trust-evaluation/commits)
 
 An **interactive diagnostic skill** for evaluating and designing trust/accuracy frameworks for AI systems that extract, synthesize, or generate intelligence from uncontrolled sources (open web, public data, multi-source RAG).
 
