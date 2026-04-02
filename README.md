@@ -1,9 +1,10 @@
-# AI Trust Evaluation - Claude Code Skill
+# AI Trust Evaluation
+
 [![GitHub release](https://img.shields.io/github/v/release/wan-huiyan/ai-trust-evaluation)](https://github.com/wan-huiyan/ai-trust-evaluation/releases) [![Claude Code](https://img.shields.io/badge/Claude_Code-skill-orange)](https://claude.com/claude-code) [![license](https://img.shields.io/github/license/wan-huiyan/ai-trust-evaluation)](LICENSE) [![last commit](https://img.shields.io/github/last-commit/wan-huiyan/ai-trust-evaluation)](https://github.com/wan-huiyan/ai-trust-evaluation/commits)
 
-An **interactive diagnostic skill** for evaluating and designing trust/accuracy frameworks for AI systems that extract, synthesize, or generate intelligence from uncontrolled sources (open web, public data, multi-source RAG).
+Point this skill at your AI product and get a tailored trust roadmap — what to build, what to skip, and which failure modes will bite you.
 
-Unlike a static reference doc, this skill **actively diagnoses your specific situation** — it scans your codebase for trust-relevant signals, asks targeted questions about your product and users, then produces a tailored action plan with only the strategies that apply to you.
+Unlike a static checklist, this skill **actively diagnoses your situation** — it scans your codebase for trust-relevant signals, asks targeted questions, then produces a phased action plan with only the strategies that apply to you. Works for any system that pulls from the open web, RAG pipelines, or LLM-generated content.
 
 ## How It Works
 
@@ -36,52 +37,6 @@ Phase 4: Deep Dive        → Optional: implementation details for any strategy,
 - Evaluating whether a proposed trust framework will actually work
 - Someone asks "how do we make users trust our AI outputs?"
 - Building evaluation pipelines for web-extracted intelligence
-
-## What It Covers
-
-### Core Framework
-- **The Three Laws of Trust** — accountability, track record, simplicity (trust is relational, not just informational)
-- **The Inversion Principle** — detect when wrong (tractable) vs prove when right (unbounded)
-- **17-Strategy Taxonomy** across 3 layers: backend intelligence, trust UX, continuous calibration
-- **39-Issue Registry** of common pitfalls including source independence, circular sourcing, cognitive overload
-- **Failure Mode Analysis** — the most dangerous failure is when false claims get the highest confidence scores
-- **Persona-Based Design** — executive (one score), consultant (exportable proof), analyst (full transparency)
-
-### Research-Backed Implementation Pipeline (New in v2.0)
-A 7-step pipeline grounded in 25+ academic papers:
-
-1. **Claim Decomposition** — break outputs into atomic, verifiable claims ([FActScore](https://arxiv.org/abs/2305.14251), [Molecular Facts](https://arxiv.org/abs/2406.20317), [Adaptive Decomposition](https://arxiv.org/abs/2501.00085))
-2. **Per-Claim Verification** — search-augmented fact-checking for each claim ([SAFE pipeline](https://arxiv.org/abs/2403.18802) from Google DeepMind)
-2.5. **Fast-Pass Hallucination Detection** — lightweight first-pass filtering using [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) (Vectara) or [Lynx](https://arxiv.org/abs/2407.08488) (Patronus AI, beats GPT-4 on HaluBench). Use [DeepEval](https://github.com/confident-ai/deepeval) (14.2k ⭐) or [RAGAS v0.4+](https://github.com/explodinggradients/ragas) (13.1k ⭐) for scored evaluation with reasoning.
-3. **Source Independence Detection** — near-duplicate clustering + citation graph analysis to avoid counting syndicated content as corroboration ([MAFC](https://arxiv.org/abs/2305.13281))
-4. **Corroboration Scoring** — credibility-weighted aggregation across truly independent sources
-5. **Uncertainty Quantification** — semantic entropy to detect hallucinations without ground truth ([Semantic Entropy](https://www.nature.com/articles/s41586-024-07421-0), Nature 2024)
-6. **Behavioral Consistency** — reference-free trust signal via multi-run stability ([TrustBC](https://arxiv.org/abs/2404.13782))
-7. **Adversarial Robustness** — defend against the [Fact-Saboteurs](https://www.usenix.org/conference/usenixsecurity23/presentation/bao) taxonomy of attacks (USENIX Security 2023)
-
-### New in v5.0.0
-
-- **Progressive disclosure architecture** — SKILL.md is now a lean 216-line process document; knowledge base extracted to `references/` files loaded on-demand per phase
-- **Improved trigger accuracy** — precision 81.8%, recall 90.0% (up from 73.9%/85.0%) with stronger negative boundaries and natural-language trigger phrases
-- **Error handling & handoff points** — explicit behavior for minimal input, out-of-scope requests, and handoffs to agent-review-panel and deep-research
-- **Schliff-benchmarked** — composite score 80.4/100 across 7 dimensions, 34/38 eval assertions passing. Improved with [Schliff](https://github.com/Zandereins/schliff), the disciplined skill improvement framework
-
-### v4.0.0
-
-- **Tiered Evaluation Pipeline** — 4-tier cost/thoroughness routing: HHEM fast-pass → DeepEval/RAGAS scored → RefChecker granular → ChainPoll/Semantic Entropy high-confidence
-- **DeepEval integration** (14.2k ⭐) — 30+ metrics, Pytest-native CI/CD, debuggable LLM judge reasoning
-- **Vectara Hallucination Leaderboard** — model selection based on hallucination rates across 100+ models
-- **Lynx** — first open-source model beating GPT-4 on hallucination detection (HaluBench)
-- **RefChecker** — knowledge-triplet verification for pinpointing specific hallucinated claims
-- **ChainPoll** — multi-sample CoT voting for high-confidence detection
-- **HELM benchmarks** — holistic model evaluation for trust-sensitive applications
-- **RAGAS v0.4+** — updated coverage including multimodal, agent, and multi-turn evaluation
-
-### Competitive Landscape
-No existing Claude Code skill or tool provides a general-purpose AI trust evaluation framework. This skill uniquely combines claim-level verification, trust UX design, and continuous calibration into a single reusable framework.
-
-### Open-Source Tools Referenced
-[FActScore](https://github.com/shmsw25/FActScore) | [SAFE](https://github.com/google-deepmind/long-form-factuality) | [RAGAS v0.4+](https://github.com/explodinggradients/ragas) (13.1k ⭐) | [DeepEval](https://github.com/confident-ai/deepeval) (14.2k ⭐) | [Lynx](https://huggingface.co/PatronusAI/Llama-3-Patronus-Lynx-70B-Instruct) | [RefChecker](https://github.com/amazon-science/RefChecker) | [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) | [HELM](https://github.com/stanford-crfm/helm) (2.7k ⭐) | [Vectara Leaderboard](https://github.com/vectara/hallucination-leaderboard) (3.2k ⭐)
 
 ## Example: What a Session Looks Like
 
@@ -171,15 +126,45 @@ Here's a real interaction showing how the skill adapts to a specific product (a 
 > - **User correction loop** — <2% adoption without incentives; defer
 </details>
 
-## Key Insights
+## What It Covers
 
-> "The framework's most dangerous failure mode is success." — A false claim from syndicated sources receives the highest confidence score, causing users to trust wrong outputs *more* than without the framework.
+### Core Framework
+- **The Three Laws of Trust** — accountability, track record, simplicity (trust is relational, not just informational)
+- **The Inversion Principle** — detect when wrong (tractable) vs prove when right (unbounded)
+- **17-Strategy Taxonomy** across 3 layers: backend intelligence, trust UX, continuous calibration
+- **39-Issue Registry** of common pitfalls including source independence, circular sourcing, cognitive overload
+- **Failure Mode Analysis** — the most dangerous failure is when false claims get the highest confidence scores
+- **Persona-Based Design** — executive (one score), consultant (exportable proof), analyst (full transparency)
 
-> "Instead of proving claims correct (unbounded), detect when the system is likely wrong (tractable)." — The Inversion Principle
+### Research-Backed Verification Pipeline
 
-> "Trust is built through accountability, track record, and simplicity — not through 17 layers of epistemological metadata."
+An 8-step pipeline grounded in 25+ academic papers:
+
+1. **Claim Decomposition** — break outputs into atomic, verifiable claims ([FActScore](https://arxiv.org/abs/2305.14251), [Molecular Facts](https://arxiv.org/abs/2406.20317), [Adaptive Decomposition](https://arxiv.org/abs/2501.00085))
+2. **Per-Claim Verification** — search-augmented fact-checking for each claim ([SAFE pipeline](https://arxiv.org/abs/2403.18802) from Google DeepMind)
+3. **Fast-Pass Hallucination Detection** — lightweight first-pass filtering using [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) (Vectara) or [Lynx](https://arxiv.org/abs/2407.08488) (Patronus AI). Use [DeepEval](https://github.com/confident-ai/deepeval) or [RAGAS](https://github.com/explodinggradients/ragas) for scored evaluation with reasoning.
+4. **Source Independence Detection** — near-duplicate clustering + citation graph analysis to avoid counting syndicated content as corroboration ([MAFC](https://arxiv.org/abs/2305.13281))
+5. **Corroboration Scoring** — credibility-weighted aggregation across truly independent sources
+6. **Uncertainty Quantification** — semantic entropy to detect hallucinations without ground truth ([Semantic Entropy](https://www.nature.com/articles/s41586-024-07421-0), Nature 2024)
+7. **Behavioral Consistency** — reference-free trust signal via multi-run stability ([TrustBC](https://arxiv.org/abs/2404.13782))
+8. **Adversarial Robustness** — defend against the [Fact-Saboteurs](https://www.usenix.org/conference/usenixsecurity23/presentation/bao) taxonomy of attacks (USENIX Security 2023)
+
+### Open-Source Tools Referenced
+
+[FActScore](https://github.com/shmsw25/FActScore) | [SAFE](https://github.com/google-deepmind/long-form-factuality) | [RAGAS](https://github.com/explodinggradients/ragas) | [DeepEval](https://github.com/confident-ai/deepeval) | [Lynx](https://huggingface.co/PatronusAI/Llama-3-Patronus-Lynx-70B-Instruct) | [RefChecker](https://github.com/amazon-science/RefChecker) | [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) | [HELM](https://github.com/stanford-crfm/helm) | [Vectara Leaderboard](https://github.com/vectara/hallucination-leaderboard)
+
+## Design Principles
+
+- **The framework's most dangerous failure mode is success.** A false claim from syndicated sources receives the highest confidence score, causing users to trust wrong outputs *more* than without the framework.
+- **Detect when wrong, not prove when right.** Proving correctness is unbounded; detecting likely errors is tractable. This is the Inversion Principle.
+- **Trust comes from accountability, track record, and simplicity** — not from 17 layers of epistemological metadata.
 
 ## Installation
+
+### Prerequisites
+
+- [Claude Code](https://claude.com/claude-code) (latest version recommended)
+- Works best with Claude Opus or Sonnet models
 
 ### Claude Code
 
@@ -193,6 +178,8 @@ Here's a real interaction showing how the skill adapts to a specific product (a 
 ```bash
 git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.claude/skills/ai-trust-evaluation
 ```
+
+**Verify installation:** Ask Claude Code a trust-related question like *"how do we make users trust our AI outputs?"* — the skill should activate automatically and begin with Phase 0 auto-detection.
 
 ### Cursor
 
@@ -215,38 +202,19 @@ npx skills add wan-huiyan/ai-trust-evaluation --global
 git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.cursor/skills/ai-trust-evaluation
 ```
 
+## Contributing
+
+Contributions welcome, especially around keeping research references current. Please open an issue before submitting a PR for non-trivial changes.
+
 ## Origin
 
-This skill was extracted from a structured brainstorming session + 5-agent adversarial review panel using the [Agent Review Panel](https://github.com/wan-huiyan/agent-review-panel) skill (Feasibility Analyst, Stakeholder Advocate, Risk Assessor, Statistical Rigor Reviewer, Devil's Advocate) with completeness audit and supreme judge arbitration. The review methodology draws on [ChatEval](https://arxiv.org/abs/2308.07201) (ICLR 2024), [AutoGen](https://github.com/microsoft/autogen), [Du et al.](https://arxiv.org/abs/2305.14325) (ICML 2024), [MachineSoM](https://arxiv.org/abs/2305.11846) (ACL 2024), and [DebateLLM](https://arxiv.org/abs/2311.09763).
-
-v2.0 was enhanced through deep research across 25+ academic papers and competitive analysis of 15 existing tools:
-
-| Paper | Venue | Contribution |
-|-------|-------|-------------|
-| [FActScore](https://arxiv.org/abs/2305.14251) | EMNLP 2023 | Atomic fact evaluation framework |
-| [SAFE](https://arxiv.org/abs/2403.18802) | NeurIPS 2024 | Search-augmented factual evaluation (Google DeepMind) |
-| [Semantic Entropy](https://www.nature.com/articles/s41586-024-07421-0) | Nature 2024 | Uncertainty quantification without ground truth |
-| [Molecular Facts](https://arxiv.org/abs/2406.20317) | 2024 | Decontextualized claim decomposition |
-| [MAFC](https://arxiv.org/abs/2305.13281) | 2026 | Multi-agent fact-checking with credibility weighting |
-| [TrustBC](https://arxiv.org/abs/2404.13782) | 2024 | Behavioral consistency as reference-free trust signal |
-| [Fact-Saboteurs](https://www.usenix.org/conference/usenixsecurity23/presentation/bao) | USENIX Security 2023 | Adversarial attack taxonomy for fact-checking |
-| [ELM Trust UX](https://doi.org/10.1108/INTR-2024-ELM) | Emerald 2025 | Persona-based trust interface design |
-| [DeepEval](https://github.com/confident-ai/deepeval) | 2024 | 30+ LLM evaluation metrics with Pytest-native CI/CD |
-| [Lynx](https://arxiv.org/abs/2407.08488) | 2024 | Open-source hallucination detector beating GPT-4 |
-| [RefChecker](https://arxiv.org/abs/2405.14486) | 2024 | Knowledge-triplet verification (Amazon Science) |
-| [ChainPoll](https://arxiv.org/abs/2310.18344) | 2023 | Multi-sample CoT hallucination detection |
-| [HELM](https://github.com/stanford-crfm/helm) | 2022+ | Holistic model evaluation (Stanford CRFM) |
-| [Vectara HHEM](https://github.com/vectara/hallucination-leaderboard) | 2024+ | Hallucination leaderboard: 100+ models, 7.7k articles |
+This skill was built through a structured brainstorming session + 5-agent adversarial review panel using the [Agent Review Panel](https://github.com/wan-huiyan/agent-review-panel) skill. Enhanced through deep research across 25+ academic papers and competitive analysis of 15 existing tools. See the [full research bibliography](skills/ai-trust-evaluation/references/tools-and-papers.md) for citations.
 
 ## Version History
 
-| Version | Changes |
-|---------|---------|
-| 5.0.0 | Progressive disclosure (SKILL.md 533→216 lines), `references/` extraction, improved triggers (precision 82%, recall 90%), error handling, [Schliff](https://github.com/Zandereins/schliff)-benchmarked at 80.4/100 |
-| 4.0.0 | Tiered evaluation pipeline, DeepEval, HHEM/Vectara leaderboard, Lynx, RefChecker, ChainPoll, HELM, RAGAS v0.4+ |
-| 3.0.0 | Research-backed 7-step pipeline, 25+ papers, adaptive decomposition, molecular facts |
-| 2.0.0 | Research-backed implementation pipeline, semantic entropy, adversarial robustness |
-| 1.0.0 | Initial release: trust taxonomy, 17 strategies, 39-issue registry |
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
+
+Current version: check [releases](https://github.com/wan-huiyan/ai-trust-evaluation/releases).
 
 ## License
 

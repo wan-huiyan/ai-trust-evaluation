@@ -1,6 +1,6 @@
 {
   "name": "ai-trust-evaluation",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Evaluate and design trust/accuracy frameworks for AI systems that extract intelligence from uncontrolled sources. Covers FActScore, SAFE, Semantic Entropy, RAGAS v0.4+, DeepEval, HHEM, Lynx, RefChecker, ChainPoll, and HELM.",
   "author": {
     "name": "wan-huiyan",

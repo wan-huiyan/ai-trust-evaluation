@@ -23,7 +23,7 @@ description: |
   controlled corpora (use standard RAG evaluation), bias auditing, or general ML model
   evaluation (precision/recall/F1).
 author: wan-huiyan
-version: 4.1.0
+version: 5.0.0
 date: 2026-03-24
 dependencies:
   required: [WebSearch, WebFetch, Read, Write]
