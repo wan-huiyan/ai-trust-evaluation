@@ -202,6 +202,12 @@ npx skills add wan-huiyan/ai-trust-evaluation --global
 git clone https://github.com/wan-huiyan/ai-trust-evaluation.git ~/.cursor/skills/ai-trust-evaluation
 ```
 
+## Limitations
+
+- Does not perform dynamic security testing or runtime analysis
+- Trust assessment quality depends on the accuracy of information you provide
+- Not a substitute for a formal security audit or penetration test
+
 ## Contributing
 
 Contributions welcome, especially around keeping research references current. Please open an issue before submitting a PR for non-trivial changes.
