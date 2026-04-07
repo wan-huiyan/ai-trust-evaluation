@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "wan-huiyan-ai-trust-evaluation",
+  "description": "Single-plugin marketplace for ai-trust-evaluation — Evaluate and design trust/accuracy frameworks for AI systems",
+  "owner": {
+    "name": "wan-huiyan"
+  },
+  "plugins": [
+    {
+      "name": "ai-trust-evaluation",
+      "source": "./plugins/ai-trust-evaluation",
+      "description": "Evaluate and design trust/accuracy frameworks for AI systems",
+      "version": "5.1.0"
+    }
+  ]
+}
